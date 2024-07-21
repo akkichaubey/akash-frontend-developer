@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        @apply overscroll-auto;
+        scrollbar-color: #000 #fff;
+        scrollbar-width: thin;
+    }
+
+    *,
+    *:after,
+    *:before {
+        @apply m-0 p-0 box-border;
+        scrollbar-width: thin;
+    }
+
+    ::-webkit-scrollbar {
+        @apply w-[7px] h-[7px] rounded-lg;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-white rounded-lg;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-black rounded-lg;
+    }
+
+    body {
+        @apply font-body text-base leading-[1.3] font-normal text-black bg-white w-full min-h-full overflow-x-hidden;
+        scrollbar-color: #0070f0 #fff;
+        scrollbar-width: thin;
+    }
+
+    h1,
+    .h1,
+    h2,
+    .h2,
+    h3,
+    .h3,
+    h4,
+    .h4,
+    h5,
+    .h5,
+    h6,
+    .h6 {
+        @apply font-bold leading-[1.3] text-black;
+    }
+
+    h1,
+    .h1 {
+        @apply text-[28px] leading-[1.2] sm:text-[32px] md:text-[35px] lg:text-[45px] xl:text-[50px];
+    }
+
+    h2,
+    .h2 {
+        @apply text-[26px] sm:text-[28px] md:text-[34px] lg:text-[38px] xl:text-[40px] leading-[1.2];
+    }
+
+    h3,
+    .h3 {
+        @apply text-[24px];
+    }
+
+    h4,
+    .h4 {
+        @apply text-[20px];
+    }
+
+    h5,
+    .h5 {
+        @apply text-[18px];
+    }
+
+    h6,
+    .h6 {
+        @apply text-[16px];
+    }
+
+    a,
+    button {
+        @apply outline-['none'] no-underline transition-all duration-300 ease-in-out;
+    }
+
+    a,
+    button p:last-of-type {
+        @apply mb-0;
+    }
+
+    img {
+        @apply border-0 align-top max-w-full h-auto;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        @apply hidden
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+}
+
+@layer components {
+    .section {
+        @apply relative;
+    }
+
+    .bg-gradient {
+        @apply bg-gradient-to-r from-[#F5F0FF] via-[#EFF6FE] to-[#EDFAF5];
+    }
+
+    .bg-grey {
+        @apply bg-grey-100;
+    }
+
+    .container {
+        @apply max-w-[1170px];
+    }
+
+    .t-transition {
+        @apply transition-all duration-300 ease-in-out;
+    }
+}
