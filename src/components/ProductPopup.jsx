@@ -35,18 +35,28 @@ const ProductPopup = ({ openModal, handlePopup, id }) => {
                     </h3>
                 </div>
                 {status === 'loading' ? (
-                    <div className="text-center">
+                    <div className="text-center py-6">
                         <Loader />
                     </div>
                 ) : status === 'failed' ? (
                     <p>Error: {error}</p>
                 ) : (
                     <div className="flex flex-wrap h-full px-5">
-                        <div className="w-4/12 py-5 border-r border-black border-opacity-10 h-full overflow-auto no-scrollbar"></div>
+                        <div className="w-4/12 py-5 pr-5 border-r border-black border-opacity-10 h-full overflow-auto no-scrollbar">
+                            <div className="img-cover">
+                                <img
+                                    src={product.strMealThumb}
+                                    alt={product.strMeal}
+                                />
+                            </div>
+                        </div>
                         <div className="w-2/3 py-5 pl-5 h-full overflow-auto no-scrollbar">
                             <h3 className="h3 text-black text-opacity-80">
                                 {product.strMeal}
                             </h3>
+                            <div className="pt-3">
+                                <p>{product.strInstructions}</p>
+                            </div>
                         </div>
                     </div>
                 )}

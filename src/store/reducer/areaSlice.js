@@ -2,18 +2,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Thunk for fetching areas
-export const fetchAreas = createAsyncThunk('areas/fetchAreas', async () => {
-    const res = await axios.get(
+export const fetchAreas = createAsyncThunk('area/fetchAreas', async () => {
+    const response = await axios.get(
         'https://www.themealdb.com/api/json/v1/1/list.php?a=list'
     );
-    return res.data; // Return the entire response data
+    return response.data.meals;
 });
 
-// Create the area slice
 const areaSlice = createSlice({
-    name: 'areas',
+    name: 'area',
     initialState: {
-        area: [],
+        areas: [],
         status: 'idle',
         error: null,
     },
@@ -25,8 +24,7 @@ const areaSlice = createSlice({
             })
             .addCase(fetchAreas.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.area = action.payload.meals; // Correct the payload access
-                // console.log(state.area);
+                state.areas = action.payload;
             })
             .addCase(fetchAreas.rejected, (state, action) => {
                 state.status = 'failed';

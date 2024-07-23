@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //store
 import { fetchCategories } from '../store/reducer/categoriesSlice';
-import { fetchProductsByCategories } from '../store/reducer/productFilterSlice';
+import {
+    fetchProductsByCategories,
+    fetchProductByArea,
+    setCurrentCategory,
+    setCurrentPage,
+    setIsArea,
+} from '../store/reducer/productFilterSlice';
 
 //component
 import Loader from './Loader';
@@ -17,7 +23,10 @@ const FilterDropdown = () => {
     const status = useSelector((state) => state.categories.status);
     const error = useSelector((state) => state.categories.error);
 
-    const [selectedCategories, setselectedCategories] = useState('');
+    const currentPage = useSelector((state) => state.productFilter.currentPage);
+
+    const [selectedCategories, setSelectedCategories] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -27,13 +36,54 @@ const FilterDropdown = () => {
         }
     }, [dispatch, status]);
 
+    useEffect(() => {
+        if (selectedCategories) {
+            if (selectedCategories === 'Indian') {
+                dispatch(setIsArea(true));
+                dispatch(
+                    fetchProductByArea({
+                        area: selectedCategories,
+                        page: currentPage,
+                    })
+                );
+            } else {
+                dispatch(setIsArea(false));
+                dispatch(
+                    fetchProductsByCategories({
+                        category: selectedCategories,
+                        page: currentPage,
+                    })
+                );
+            }
+        }
+    }, [dispatch, selectedCategories, currentPage]);
+
     const isArray = Array.isArray(categories);
 
     const handlePopup = () => {
         setOpenModal(!openModal);
     };
-    const handleApply = () => {
-        dispatch(fetchProductsByCategories(selectedCategories));
+
+    const handleCategoryChange = (e) => {
+        const selectedCategory = e.target.value;
+        dispatch(setCurrentCategory(selectedCategory));
+        dispatch(setCurrentPage(1));
+        if (selectedCategory === 'Indian') {
+            dispatch(setIsArea(true));
+            dispatch(fetchProductByArea({ area: selectedCategory, page: 1 }));
+        } else {
+            dispatch(setIsArea(false));
+            dispatch(
+                fetchProductsByCategories({
+                    category: selectedCategory,
+                    page: 1,
+                })
+            );
+        }
+    };
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
     };
 
     return (
@@ -55,6 +105,74 @@ const FilterDropdown = () => {
                             Filter <Icon name="filter-icon" size="16" />
                         </button>
                     </li>
+                    <li>
+                        <button
+                            className="text-sm font-medium leading-normal inline-flex items-center gap-x-1 border border-black border-opacity-30 py-2 px-3 rounded-full text-gray text-opacity-75 shadow-[0_2px_12px_rgba(2,6,12,0.04)] cursor-pointer transition-all duration-300 ease-in-out"
+                            type="button"
+                            onClick={toggleDropdown}
+                        >
+                            Dropdown button{' '}
+                            <svg
+                                className="w-2.5 h-2.5 ms-3"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 10 6"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="m1 1 4 4 4-4"
+                                />
+                            </svg>
+                        </button>
+                        {isDropdownOpen && (
+                            <div
+                                id="dropdown"
+                                className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+                            >
+                                <ul
+                                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="dropdownDefaultButton"
+                                >
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        >
+                                            Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        >
+                                            Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        >
+                                            Earnings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        >
+                                            Sign out
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </li>
                     {isArray ? (
                         categories.map((item, index) => (
                             <li key={index}>
@@ -64,10 +182,7 @@ const FilterDropdown = () => {
                                     name="category"
                                     value={item.strCategory}
                                     className="hidden peer"
-                                    onChange={(e) =>
-                                        setselectedCategories(e.target.value)
-                                    }
-                                    onClick={handleApply}
+                                    onChange={handleCategoryChange}
                                 />
                                 <label
                                     htmlFor={`category-${index}`}

@@ -1,23 +1,52 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ReactPaginate from 'react-paginate';
 
 import FilterDropdown from '../components/FilterDropdown';
 import ProductBox from '../components/ProductBox';
 
 //store
-import { fetchProductByArea } from '../store/reducer/productFilterSlice';
+import {
+    fetchProductByArea,
+    fetchProductsByCategories,
+    setCurrentPage,
+} from '../store/reducer/productFilterSlice';
+import Icon from '../inc/Icon';
 
 const Home = () => {
     const dispatch = useDispatch();
 
-    const { products, status, error } = useSelector(
-        (state) => state.productFilter
-    );
-    console.log(products);
+    const {
+        products,
+        totalProducts,
+        currentPage,
+        currentCategory,
+        isArea,
+        status,
+        error,
+    } = useSelector((state) => state.productFilter);
 
     useEffect(() => {
-        dispatch(fetchProductByArea('Indian'));
-    }, [dispatch]);
+        if (isArea) {
+            dispatch(
+                fetchProductByArea({
+                    area: currentCategory,
+                    page: currentPage,
+                })
+            );
+        } else {
+            dispatch(
+                fetchProductsByCategories({
+                    category: currentCategory,
+                    page: currentPage,
+                })
+            );
+        }
+    }, [dispatch, currentPage, currentCategory, isArea]);
+
+    const handlePageClick = (data) => {
+        dispatch(setCurrentPage(data.selected + 1));
+    };
 
     return (
         <div className="py-12">
@@ -41,6 +70,70 @@ const Home = () => {
                     </div>
                 ) : (
                     status === 'succeeded' && <p>No products available.</p>
+                )}
+                {status === 'succeeded' && products.length > 0 && (
+                    <div className="pt-5">
+                        <ReactPaginate
+                            previousLabel={
+                                <Icon name="chevron-left-icon" size="16" />
+                            }
+                            nextLabel={
+                                <Icon name="chevron-right-icon" size="16" />
+                            }
+                            breakLabel={'...'}
+                            pageCount={Math.ceil(totalProducts / 12)}
+                            pageRangeDisplayed={5}
+                            onPageChange={handlePageClick}
+                            containerClassName={
+                                'flex flex-wrap justify-center items-center gap-x-2'
+                            }
+                            pageClassName={'w-8 h-8 grid place-items-center'}
+                            pageLinkClassName={
+                                'bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
+                            }
+                            previousClassName={
+                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
+                            }
+                            nextClassName={
+                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
+                            }
+                            activeClassName={'active'}
+                            activeLinkClassName={
+                                'bg-black text-white rounded-lg'
+                            }
+                            disabledClassName={'pointer-events-none'}
+                            disabledLinkClassName={'pointer-events-none'}
+                        />
+                        {/* <ReactPaginate
+                            previousLabel={
+                                <Icon name="chevron-left-icon" size="16" />
+                            }
+                            nextLabel={
+                                <Icon name="chevron-right-icon" size="16" />
+                            }
+                            renderOnZeroPageCountrenderOnZeroPageCount={null}
+                            s
+                            breakLabel={'...'}
+                            pageCount={Math.ceil(totalProducts / 12)}
+                            pageRangeDisplayed={5}
+                            onPageChange={handlePageClick}
+                            containerClassName={
+                                'flex flex-wrap justify-center items-center gap-x-2'
+                            }
+                            pageLinkClassName={
+                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
+                            }
+                            nextClassName={
+                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
+                            }
+                            previousLinkClassName={
+                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
+                            }
+                            // activeClassName={'bg-black text-white rounded-lg'}
+                            disabledClassName={'pointer-events-none'}
+                            disabledLinkClassName={'pointer-events-none'}
+                        /> */}
+                    </div>
                 )}
             </div>
         </div>
