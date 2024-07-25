@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 
 import ProductPopup from './ProductPopup';
-import { fetchSingleProduct } from '../store/reducer/productSlice';
+import { fetchSingleProduct } from '../store/reducer/ProductSlice';
 import Rating from './Rating';
 
 const ProductBox = ({ data }) => {
