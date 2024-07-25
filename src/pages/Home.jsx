@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactPaginate from 'react-paginate';
+import Skeleton from 'react-loading-skeleton';
 
 import FilterDropdown from '../components/FilterDropdown';
 import ProductBox from '../components/ProductBox';
 
-//store
+// Store
 import {
     fetchProductByArea,
     fetchProductsByCategories,
     setCurrentPage,
 } from '../store/reducer/productFilterSlice';
-import Icon from '../inc/Icon';
+import Pagination from '../components/Pagination';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -25,7 +25,6 @@ const Home = () => {
         status,
         error,
     } = useSelector((state) => state.productFilter);
-
     useEffect(() => {
         if (isArea) {
             dispatch(
@@ -42,20 +41,23 @@ const Home = () => {
                 })
             );
         }
-    }, [dispatch, currentPage, currentCategory, isArea]);
+    }, [dispatch, currentCategory, isArea, currentPage]);
 
-    const handlePageClick = (data) => {
-        dispatch(setCurrentPage(data.selected + 1));
+    const handlePageClick = (num) => {
+        dispatch(setCurrentPage(num.selected + 1));
     };
 
     return (
         <div className="py-12">
             <div className="container">
-                <h2 className="h3 text-black pb-4">
-                    Restaurants with online food delivery in Ahmedabad
-                </h2>
+                <h1 className="pb-4">
+                    {status === 'loading' ? (
+                        <Skeleton count={1} />
+                    ) : (
+                        'Restaurants with online food delivery in Ahmedabad'
+                    )}
+                </h1>
                 <FilterDropdown />
-                {status === 'loading' && <p>Loading...</p>}
                 {status === 'failed' && <p>Error: {error}</p>}
                 {status === 'succeeded' && products.length > 0 ? (
                     <div className="flex flex-wrap -mx-[15px] pt-9">
@@ -73,66 +75,11 @@ const Home = () => {
                 )}
                 {status === 'succeeded' && products.length > 0 && (
                     <div className="pt-5">
-                        <ReactPaginate
-                            previousLabel={
-                                <Icon name="chevron-left-icon" size="16" />
-                            }
-                            nextLabel={
-                                <Icon name="chevron-right-icon" size="16" />
-                            }
-                            breakLabel={'...'}
-                            pageCount={Math.ceil(totalProducts / 12)}
-                            pageRangeDisplayed={5}
-                            onPageChange={handlePageClick}
-                            containerClassName={
-                                'flex flex-wrap justify-center items-center gap-x-2'
-                            }
-                            pageClassName={'w-8 h-8 grid place-items-center'}
-                            pageLinkClassName={
-                                'bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
-                            }
-                            previousClassName={
-                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
-                            }
-                            nextClassName={
-                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
-                            }
-                            activeClassName={'active'}
-                            activeLinkClassName={
-                                'bg-black text-white rounded-lg'
-                            }
-                            disabledClassName={'pointer-events-none'}
-                            disabledLinkClassName={'pointer-events-none'}
+                        <Pagination
+                            total={Math.ceil(totalProducts / 12)}
+                            handleClick={handlePageClick}
+                            currentPage={currentPage}
                         />
-                        {/* <ReactPaginate
-                            previousLabel={
-                                <Icon name="chevron-left-icon" size="16" />
-                            }
-                            nextLabel={
-                                <Icon name="chevron-right-icon" size="16" />
-                            }
-                            renderOnZeroPageCountrenderOnZeroPageCount={null}
-                            s
-                            breakLabel={'...'}
-                            pageCount={Math.ceil(totalProducts / 12)}
-                            pageRangeDisplayed={5}
-                            onPageChange={handlePageClick}
-                            containerClassName={
-                                'flex flex-wrap justify-center items-center gap-x-2'
-                            }
-                            pageLinkClassName={
-                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
-                            }
-                            nextClassName={
-                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
-                            }
-                            previousLinkClassName={
-                                'w-8 h-8 grid place-items-center bg-black bg-opacity-15 rounded-lg hover:bg-opacity-25'
-                            }
-                            // activeClassName={'bg-black text-white rounded-lg'}
-                            disabledClassName={'pointer-events-none'}
-                            disabledLinkClassName={'pointer-events-none'}
-                        /> */}
                     </div>
                 )}
             </div>

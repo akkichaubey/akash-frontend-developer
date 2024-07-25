@@ -16,10 +16,6 @@ export default {
             xs: { max: '500px' },
         },
         extend: {
-            container: {
-                center: true,
-                padding: '15px',
-            },
             colors: {
                 black: {
                     DEFAULT: '#000',
@@ -36,6 +32,17 @@ export default {
                 grey: {
                     DEFAULT: '#02060c',
                     100: '#f0f0f5',
+                },
+            },
+            container: {
+                center: true,
+                padding: '1rem',
+                screens: {
+                    sm: '1470px',
+                    md: '1470px',
+                    lg: '1470px',
+                    xl: '1470px',
+                    '2xl': '1470px',
                 },
             },
             fontFamily: {

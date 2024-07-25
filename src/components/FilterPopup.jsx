@@ -42,7 +42,7 @@ const FilterPopup = ({ openModal, handlePopup }) => {
     };
 
     const isArray = Array.isArray(areas);
-    console.log(areas);
+    // console.log(areas);
     return (
         <div
             className={`fixed flex items-center justify-center top-0 left-0 w-full h-full z-50 bg-black bg-opacity-75 transition-all duration-300 ease-in-out ${

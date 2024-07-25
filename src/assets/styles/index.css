@@ -120,10 +120,6 @@
         @apply bg-grey-100;
     }
 
-    .container {
-        @apply max-w-[1170px];
-    }
-
     .t-transition {
         @apply transition-all duration-300 ease-in-out;
     }

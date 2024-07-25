@@ -1,11 +1,20 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import Icon from '../inc/Icon';
 import Loader from './Loader';
+import Rating from './Rating';
+
 const ProductPopup = ({ openModal, handlePopup, id }) => {
     const { product, status, error } = useSelector((state) => state.product);
-    console.log(product);
+    const [stars, setStars] = useState(0);
+
+    useEffect(() => {
+        const randomStars = Math.floor(Math.random() * 5) + 1;
+        setStars(randomStars);
+    }, []);
 
     return (
         <div
@@ -35,8 +44,16 @@ const ProductPopup = ({ openModal, handlePopup, id }) => {
                     </h3>
                 </div>
                 {status === 'loading' ? (
-                    <div className="text-center py-6">
-                        <Loader />
+                    <div className="flex flex-wrap h-full px-5">
+                        <div className="w-4/12 py-5 pr-5 border-r border-black border-opacity-10 h-full overflow-auto no-scrollbar">
+                            <Skeleton height={300} />
+                        </div>
+                        <div className="w-2/3 py-5 pl-5 h-full overflow-auto no-scrollbar">
+                            <Skeleton width={200} height={24} />
+                            <div className="pt-3">
+                                <Skeleton count={3} />
+                            </div>
+                        </div>
                     </div>
                 ) : status === 'failed' ? (
                     <p>Error: {error}</p>
@@ -54,6 +71,7 @@ const ProductPopup = ({ openModal, handlePopup, id }) => {
                             <h3 className="h3 text-black text-opacity-80">
                                 {product.strMeal}
                             </h3>
+                            <Rating rating={stars} />
                             <div className="pt-3">
                                 <p>{product.strInstructions}</p>
                             </div>

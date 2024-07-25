@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Skeleton from 'react-loading-skeleton';
 
 //store
 import { fetchCategories } from '../store/reducer/categoriesSlice';
@@ -9,10 +10,9 @@ import {
     setCurrentCategory,
     setCurrentPage,
     setIsArea,
+    setSortOrder, // Import setSortOrder action
 } from '../store/reducer/productFilterSlice';
-
 //component
-import Loader from './Loader';
 import Icon from '../inc/Icon';
 import FilterPopup from './FilterPopup';
 
@@ -81,6 +81,9 @@ const FilterDropdown = () => {
             );
         }
     };
+    const handleSortOrderChange = (order) => {
+        dispatch(setSortOrder(order));
+    };
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -90,7 +93,7 @@ const FilterDropdown = () => {
         <>
             {status === 'loading' ? (
                 <div className="text-center">
-                    <Loader />
+                    <Skeleton count={1} height={43} />
                 </div>
             ) : status === 'failed' ? (
                 <p>Error: {error}</p>
@@ -111,7 +114,7 @@ const FilterDropdown = () => {
                             type="button"
                             onClick={toggleDropdown}
                         >
-                            Dropdown button{' '}
+                            Sort By
                             <svg
                                 className="w-2.5 h-2.5 ms-3"
                                 aria-hidden="true"
@@ -121,9 +124,7 @@ const FilterDropdown = () => {
                             >
                                 <path
                                     stroke="currentColor"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
+                                    strokeWidth="2"
                                     d="m1 1 4 4 4-4"
                                 />
                             </svg>
@@ -138,36 +139,28 @@ const FilterDropdown = () => {
                                     aria-labelledby="dropdownDefaultButton"
                                 >
                                     <li>
-                                        <a
-                                            href="#"
-                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        <button
+                                            type="button"
+                                            className="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            onClick={() => {
+                                                handleSortOrderChange('asc');
+                                                toggleDropdown();
+                                            }}
                                         >
-                                            Dashboard
-                                        </a>
+                                            Ace
+                                        </button>
                                     </li>
                                     <li>
-                                        <a
-                                            href="#"
-                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        <button
+                                            type="button"
+                                            className="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            onClick={() => {
+                                                handleSortOrderChange('desc');
+                                                toggleDropdown();
+                                            }}
                                         >
-                                            Settings
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >
-                                            Earnings
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >
-                                            Sign out
-                                        </a>
+                                            Dec
+                                        </button>
                                     </li>
                                 </ul>
                             </div>
