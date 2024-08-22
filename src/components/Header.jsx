@@ -20,6 +20,7 @@ const Header = () => {
                         </div>
                         <div className="h-20 sm:h-14 flex items-center transition-all duration-300 ease-in-out">
                             <button
+                                aria-label="Handle search toggle"
                                 className="w-8 h-8 grid place-items-center min-sm:hidden"
                                 onClick={handleSearchToggle}
                             >
@@ -39,7 +40,10 @@ const Header = () => {
                                             placeholder="Search for restaurants and food"
                                             className="w-full bg-transparent text-base sm:text-sm sm:leading-none leading-none p-2 outline-none placeholder:text-black placeholder:text-opacity-50"
                                         />
-                                        <button className="w-6 h-6 grid place-items-center text-black text-opacity-60">
+                                        <button
+                                            aria-label="Search icon"
+                                            className="w-6 h-6 grid place-items-center text-black text-opacity-60"
+                                        >
                                             <Icon
                                                 name="search-icon"
                                                 size="16"
